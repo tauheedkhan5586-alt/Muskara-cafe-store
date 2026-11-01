@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muskara Cafe & Store</title>
+<style>
+:root{--ink:#20251f;--muted:#697168;--green:#245b43;--lime:#e8f1df;--cream:#fffaf0;--orange:#ed9852;--line:#e8e7df}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:var(--green);color:white;padding:18px max(18px,calc((100% - 1120px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:.04em;font-size:19px}.tag{font-size:12px;opacity:.85}.head-actions{display:flex;gap:8px}
+button,.btn{border:0;border-radius:12px;padding:11px 15px;font-weight:750;cursor:pointer;background:var(--orange);color:#271d12}
+button.secondary{background:white;color:var(--green)}button.dark{background:var(--green);color:white}
+main{max-width:1120px;margin:auto;padding:22px 18px 70px}
+.hero{background:linear-gradient(115deg,#e9f1df,#fff0dc);border-radius:24px;padding:28px;display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:center}
+.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.05;margin:8px 0 12px}.hero p{color:#4f5a4f;max-width:550px}.hero-art{font-size:clamp(70px,12vw,125px);text-align:center}
+.pill{display:inline-block;background:white;color:var(--green);border-radius:99px;padding:6px 11px;font-size:12px;font-weight:800}
+.location{color:var(--muted);font-size:13px;margin:14px 0 20px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:22px 0 14px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:white;font:inherit;color:var(--ink)}
+.search{flex:1;min-width:180px}.cats{display:flex;gap:8px;overflow:auto;padding:4px 0 14px}
+.cat{background:white;border:1px solid var(--line);border-radius:99px;padding:9px 14px;white-space:nowrap}.cat.active{background:var(--green);color:white}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.product{background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.emoji{height:125px;background:#f3f1e8;display:grid;place-items:center;font-size:58px}
+.pbody{padding:13px;display:flex;flex-direction:column;gap:7px;flex:1}.pbody h3{font-size:16px;margin:0}.desc{font-size:12px;color:var(--muted);min-height:32px}.price-row{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+.price{font-weight:850}.add{padding:8px 12px;border-radius:9px}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:26px 0 12px}.section-title h2{margin:0;font-size:23px}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:17px;margin-top:18px}
+.cart-line{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.qty{display:flex;gap:7px;align-items:center}.qty button{padding:4px 9px;background:var(--lime);color:var(--green)}
+.total{display:flex;justify-content:space-between;padding:7px 0}.grand{font-size:19px;font-weight:900;border-top:1px solid var(--line);margin-top:8px;padding-top:13px}
+.checkout-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:5px;margin:8px 0}.field label{font-size:13px;font-weight:750}
+.hidden{display:none!important}.muted{color:var(--muted);font-size:13px}.notice{background:#fff4df;border:1px solid #f1d9ac;padding:12px;border-radius:12px;font-size:13px;color:#684a22}
+footer{background:#203d30;color:#eaf1e9;padding:25px 18px;text-align:center;font-size:13px}
+.admin-order{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){header{padding:13px 14px}.brand{font-size:15px}.head-actions button{padding:9px 10px;font-size:12px}.hero{grid-template-columns:1fr;padding:22px}.hero-art{display:none}.grid{gap:10px}.emoji{height:105px}.checkout-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">😊 MUSKARA CAFE & STORE</div><div class="tag">Food • Drinks • Snacks • Grocery</div></div>
+<div class="head-actions"><button class="secondary" onclick="scrollToCart()">Cart <span id="cartCount">0</span></button><button onclick="showAdmin()">Admin</button></div></header>
+<main>
+<section class="hero"><div><span class="pill">WELCOME TO MUSKARA</span><h1>Good food. Daily essentials. Delivered with a smile.</h1><p>Order your favourites for home delivery within the service area, or choose free store pickup.</p><button class="dark" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Explore products</button></div><div class="hero-art">🍔 🥤 🛍️</div></section>
+<div class="location">📍 Near Jama Masjid, Muskara, Hamirpur, Uttar Pradesh · Delivery service area: up to 10 km (nearby villages included)</div>
+<section id="shop"><div class="section-title"><h2>Shop our store</h2><span class="muted">Sample items — edit in Admin</span></div>
+<div class="toolbar"><input class="search" id="search" placeholder="Search food, drinks, grocery..." oninput="renderProducts()"></div>
+<div class="cats" id="cats"></div><div class="grid" id="products"></div></section>
+<section class="panel" id="cartPanel"><div class="section-title"><h2>Your cart</h2><button class="secondary" onclick="clearCart()">Clear cart</button></div><div id="cartItems"><p class="muted">Your cart is empty. Add something tasty!</p></div>
+<div id="cartTotals" class="hidden"><div class="total"><span>Items total</span><b id="subtotal">₹0</b></div><div class="total"><span>Delivery charge</span><b id="deliveryFee">₹0</b></div><div class="total grand"><span>Total</span><span id="grandTotal">₹0</span></div>
+<h3>Checkout</h3><div class="checkout-grid">
+<div class="field"><label>Your name</label><input id="custName" placeholder="Full name"></div><div class="field"><label>Mobile number</label><input id="custPhone" inputmode="numeric" placeholder="10-digit number"></div>
+<div class="field"><label>Fulfilment</label><select id="fulfilment" onchange="toggleDelivery()"><option value="delivery">Home delivery</option><option value="pickup">Store pickup (free)</option></select></div>
+<div class="field" id="distanceField"><label>Approx. distance from store (km, up to 10)</label><input id="distance" type="number" min="0.5" max="10" step="0.5" value="1" oninput="updateTotals()"></div>
+<div class="field" id="addressField" style="grid-column:1/-1"><label>Delivery address / village</label><textarea id="address" rows="2" placeholder="House, street, village and landmark"></textarea></div>
+<div class="field"><label>Payment method</label><select id="payment"><option>Cash on Delivery</option><option>UPI / Online (payment setup required)</option><option>Cash at store</option></select></div>
+</div><p class="notice">Delivery fee is a placeholder until the store sets its per-kilometre rate. Online UPI payments also need a payment-gateway/UPI setup before accepting real payments.</p>
+<button class="dark" style="width:100%;margin-top:10px" onclick="placeOrder()">Place order</button></div></section>
+<section class="panel hidden" id="adminPanel"><div class="section-title"><h2>Store admin</h2><button class="secondary" onclick="hideAdmin()">Close</button></div>
+<div class="notice">This starter version saves products and orders only in this browser. It is a demo, not a secure shared admin system. Do not use it for real customer data until a secure backend is connected.</div>
+<h3>Delivery pricing</h3><div class="field"><label>Delivery fee per km (₹)</label><input id="rate" type="number" min="0" value="0" onchange="saveSettings()"></div>
+<h3>Add a product</h3><div class="checkout-grid"><div class="field"><label>Product name</label><input id="newName" placeholder="e.g. Veg Burger"></div><div class="field"><label>Price (₹)</label><input id="newPrice" type="number" min="1" placeholder="e.g. 99"></div><div class="field"><label>Category</label><select id="newCat"><option>Food</option><option>Cold Drinks</option><option>Snacks</option><option>Grocery</option><option>Daily Needs</option></select></div><div class="field"><label>Emoji</label><input id="newEmoji" maxlength="4" placeholder="🍔"></div></div><button class="dark" onclick="addProduct()">Add product</button>
+<h3>Orders on this device</h3><div id="orders"><p class="muted">No orders yet.</p></div>
+</section>
+</main><footer><b>Muskara Cafe & Store</b><br>Near Jama Masjid, Muskara, Hamirpur, Uttar Pradesh<br>Made to help your local store grow.</footer>
+<script>
+const defaults=[
+{id:1,name:"Veg Burger",cat:"Food",price:79,emoji:"🍔",desc:"Fresh and filling"},
+{id:2,name:"Pizza",cat:"Food",price:149,emoji:"🍕",desc:"A cheesy favourite"},
+{id:3,name:"French Fries",cat:"Food",price:69,emoji:"🍟",desc:"Crispy snack"},
+{id:4,name:"Cold Drink",cat:"Cold Drinks",price:40,emoji:"🥤",desc:"Chilled refreshment"},
+{id:5,name:"Mineral Water",cat:"Cold Drinks",price:20,emoji:"💧",desc:"Packaged drinking water"},
+{id:6,name:"Chips",cat:"Snacks",price:20,emoji:"🥔",desc:"Crunchy snack pack"},
+{id:7,name:"Biscuits",cat:"Snacks",price:30,emoji:"🍪",desc:"Tea-time treat"},
+{id:8,name:"Rice (1 kg)",cat:"Grocery",price:65,emoji:"🍚",desc:"Everyday grocery"},
+{id:9,name:"Cooking Oil (1 L)",cat:"Grocery",price:145,emoji:"🫗",desc:"Kitchen essential"},
+{id:10,name:"Bath Soap",cat:"Daily Needs",price:35,emoji:"🧼",desc:"Daily-use essential"}
+];
+let products=JSON.parse(localStorage.getItem("mc_products")||"null")||defaults;
+let cart=JSON.parse(localStorage.getItem("mc_cart")||"{}");
+let orders=JSON.parse(localStorage.getItem("mc_orders")||"[]");
+let category="All";
+function money(n){return "₹"+Number(n||0).toFixed(0)}
+function persist(){localStorage.setItem("mc_products",JSON.stringify(products));localStorage.setItem("mc_cart",JSON.stringify(cart));localStorage.setItem("mc_orders",JSON.stringify(orders))}
+function renderCats(){let cats=["All",...new Set(products.map(p=>p.cat))];document.getElementById("cats").innerHTML=cats.map(c=>`<button class="cat ${c===category?'active':''}" onclick="category='${c}';renderCats();renderProducts()">${c}</button>`).join("")}
+function renderProducts(){let q=document.getElementById("search").value.toLowerCase();let list=products.filter(p=>(category==="All"||p.cat===category)&&(p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)));document.getElementById("products").innerHTML=list.map(p=>`<article class="product"><div class="emoji">${p.emoji||"🛍️"}</div><div class="pbody"><h3>${p.name}</h3><div class="desc">${p.desc||p.cat}</div><div class="price-row"><span class="price">${money(p.price)}</span><button class="add" onclick="addToCart(${p.id})">+ Add</button></div></div></article>`).join("")||"<p>No matching products.</p>"}
+function addToCart(id){cart[id]=(cart[id]||0)+1;persist();renderCart()}
+function changeQty(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];persist();renderCart()}
+function clearCart(){cart={};persist();renderCart()}
+function getSubtotal(){return Object.entries(cart).reduce((s,[id,q])=>s+(products.find(p=>p.id==id)?.price||0)*q,0)}
+function fee(){if(document.getElementById("fulfilment").value==="pickup")return 0;let km=Math.min(10,Math.max(0,Number(document.getElementById("distance").value)||0));let rate=Number(localStorage.getItem("mc_rate")||0);return Math.ceil(km*rate)}
+function renderCart(){let entries=Object.entries(cart).filter(([id,q])=>q>0&&products.some(p=>p.id==id));document.getElementById("cartCount").textContent=entries.reduce((s,[id,q])=>s+q,0);document.getElementById("cartItems").innerHTML=entries.length?entries.map(([id,q])=>{let p=products.find(x=>x.id==id);return `<div class="cart-line"><div><b>${p.name}</b><div class="muted">${money(p.price)} each</div></div><div class="qty"><button onclick="changeQty(${id},-1)">−</button>${q}<button onclick="changeQty(${id},1)">+</button><b>${money(p.price*q)}</b></div></div>`}).join(""):"<p class='muted'>Your cart is empty. Add something tasty!</p>";document.getElementById("cartTotals").classList.toggle("hidden",!entries.length);updateTotals()}
+function updateTotals(){let sub=getSubtotal(),f=fee();document.getElementById("subtotal").textContent=money(sub);document.getElementById("deliveryFee").textContent=money(f);document.getElementById("grandTotal").textContent=money(sub+f)}
+function toggleDelivery(){let pickup=document.getElementById("fulfilment").value==="pickup";document.getElementById("distanceField").classList.toggle("hidden",pickup);document.getElementById("addressField").classList.toggle("hidden",pickup);updateTotals()}
+function scrollToCart(){document.getElementById("cartPanel").scrollIntoView({behavior:"smooth"})}
+function placeOrder(){if(!Object.keys(cart).length)return alert("Please add products to your cart.");let name=document.getElementById("custName").value.trim(),phone=document.getElementById("custPhone").value.trim(),mode=document.getElementById("fulfilment").value,addr=document.getElementById("address").value.trim(),km=Number(document.getElementById("distance").value);if(!name||!/^[0-9]{10}$/.test(phone))return alert("Please enter your name and a valid 10-digit mobile number.");if(mode==="delivery"&&(!addr||km<=0||km>10))return alert("Enter your delivery address and a distance up to 10 km.");let items=Object.entries(cart).map(([id,q])=>{let p=products.find(x=>x.id==id);return {name:p.name,price:p.price,qty:q}});let o={id:"MC"+Date.now().toString().slice(-7),date:new Date().toLocaleString(),name,phone,mode:mode==="pickup"?"Store pickup":"Home delivery",address:mode==="pickup"?"Store pickup":addr,distance:mode==="pickup"?0:km,items,subtotal:getSubtotal(),fee:fee(),total:getSubtotal()+fee(),payment:document.getElementById("payment").value,status:"Received"};orders.unshift(o);persist();cart={};persist();renderCart();renderOrders();alert("Order placed in this demo! Order ID: "+o.id+"\\nFor a real live store, connect a secure database and order notifications.");}
+function showAdmin(){document.getElementById("adminPanel").classList.remove("hidden");renderOrders();document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"})}
+function hideAdmin(){document.getElementById("adminPanel").classList.add("hidden")}
+function addProduct(){let name=document.getElementById("newName").value.trim(),price=Number(document.getElementById("newPrice").value),cat=document.getElementById("newCat").value,emoji=document.getElementById("newEmoji").value||"🛍️";if(!name||price<=0)return alert("Enter product name and a valid price.");products.push({id:Date.now(),name,price,cat,emoji,desc:"Available in store"});persist();renderCats();renderProducts();document.getElementById("newName").value="";document.getElementById("newPrice").value="";document.getElementById("newEmoji").value="";alert("Product added on this device.");}
+function saveSettings(){localStorage.setItem("mc_rate",document.getElementById("rate").value);updateTotals()}
+function renderOrders(){document.getElementById("orders").innerHTML=orders.length?orders.map(o=>`<div class="admin-order"><b>${o.id}</b> · ${o.date}<p>${o.name} · ${o.phone}<br>${o.mode} · ${o.address}<br>${o.items.map(i=>i.name+" × "+i.qty).join(", ")}<br>Payment: ${o.payment}<br><b>Total: ${money(o.total)}</b></p><label class="muted">Status</label><select onchange="setStatus('${o.id}',this.value)">${["Received","Preparing","Ready for pickup","Out for delivery","Delivered","Cancelled"].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join("")}</select></div>`).join(""):"<p class='muted'>No orders yet.</p>"}
+function setStatus(id,status){let o=orders.find(x=>x.id===id);if(o){o.status=status;persist()}}
+document.getElementById("rate").value=localStorage.getItem("mc_rate")||0;
+renderCats();renderProducts();renderCart();renderOrders();
+</script>
+</body></html>
